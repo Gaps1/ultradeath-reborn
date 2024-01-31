@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "gabzeph.ultrareborn.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"GhastExplosionPowerMixin",
+		"CreeperChargedMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

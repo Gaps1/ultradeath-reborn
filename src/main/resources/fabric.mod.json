@@ -1,0 +1,51 @@
+{
+	"schemaVersion": 1,
+	"id": "ultradeath-reborn",
+	"version": "${version}",
+	"name": "Ultradeath Reborn",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"gabzeph"
+	],
+	"contact": {
+
+			},
+	"license": "CC0-1.0",
+	"icon": "assets/ultradeath-reborn/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"gabzeph.ultrareborn.UltradeathReborn"
+		],
+		"client": [
+			"gabzeph.ultrareborn.UltradeathRebornClient"
+		],
+		"fabric-datagen": [
+			"gabzeph.ultrareborn.UltradeathRebornDataGenerator"
+		],
+		"cardinal-components": [
+			"gabzeph.ultrareborn.cardinal.UltradeathComponents"
+		]
+	},
+	"mixins": [
+		"ultradeath-reborn.mixins.json",
+		{
+			"config": "ultradeath-reborn.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.15.6",
+		"minecraft": "~1.20.4",
+		"java": ">=17",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	},
+	"custom": {
+		"cardinal-components": [
+			"ultradeath-reborn:week"
+		]
+	}
+}
