@@ -8,7 +8,7 @@ El 10% de los Enderman y Arañas irán con Fuerza II
 Update: El 30% de los Zombies y Esqueletos (antes 10%) irán con botas, pantalones y pechera de iron, con el efecto de Fuerza I
 Update: El 30% de los Enderman y Arañas (antes 10%) irán con Fuerza II
 
-# NOVEDADES
+### NOVEDADES
 
 El 50% Ghast ahora tienen 30 de Ataque [Polterghost]
 El 10% Skeleton irán Full Diamante Fuerza V Empuje III [Imperial Skeleton]
@@ -22,7 +22,7 @@ Update: El 60% Ghast (antes 50%) ahora tienen 30At (? [Polterghost]
 Update: El 15% Skeleton (antes 10%) irán Full Diamante Fuerza V Empuje III [Imperial Skeleton]
 Update: El 10% de Spider Jockey (antes 5%) irán con Imperial Skeleton
 
-# NOVEDADES
+### NOVEDADES
 
 Se añade la Ultraarmadura a UltraDeath, la dropearán estos mobs:
 
