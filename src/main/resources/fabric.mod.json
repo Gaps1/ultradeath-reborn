@@ -24,7 +24,7 @@
 			"gabzeph.ultrareborn.UltradeathRebornDataGenerator"
 		],
 		"cardinal-components": [
-			"gabzeph.ultrareborn.cardinal.UltradeathComponents"
+			"gabzeph.ultrareborn.cardinal.UltradeathWorldComponents"
 		]
 	},
 	"mixins": [

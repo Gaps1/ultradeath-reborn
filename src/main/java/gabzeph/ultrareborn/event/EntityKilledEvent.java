@@ -1,13 +1,11 @@
 package gabzeph.ultrareborn.event;
 
 import gabzeph.ultrareborn.armor.UltraArmor;
-import gabzeph.ultrareborn.cardinal.UltradeathComponents;
+import gabzeph.ultrareborn.cardinal.UltradeathWorldComponents;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.Text;
 
@@ -17,31 +15,19 @@ public class EntityKilledEvent {
         if (!(entity instanceof PlayerEntity)) {
             return;
         }
-        int week = UltradeathComponents.WEEK.get(world).getValue();
-        if (world.random.nextFloat() >= 0.03f) {
-            if (killedEntity.getName() == Text.literal("Ultra Husk")) {
-                ItemStack item = new ItemStack(UltraArmor.ULTRA_HELMET);
-                ItemEntity drop = new ItemEntity(world, killedEntity.getX(), killedEntity.getY(), killedEntity.getZ(), item);
-                drop.setVelocity(drop.getVelocity().add((world.random.nextFloat() - world.random.nextFloat()) * 0.1f, world.random.nextFloat() * 0.05f, (world.random.nextFloat() - world.random.nextFloat()) * 0.1f));
-                world.spawnEntity(drop);
+        int week = UltradeathWorldComponents.WEEK.get(world).getValue();
+        if (world.random.nextFloat() <= 0.1f) {
+            if (killedEntity.getType() == EntityType.HUSK && killedEntity.getName().equals(Text.literal("Ultra Husk"))) {
+                killedEntity.dropItem(UltraArmor.ULTRA_HELMET);
             }
-            if (killedEntity.getName() == Text.literal("Ultra Wither Skeleton")) {
-                ItemStack item = new ItemStack(UltraArmor.ULTRA_CHESTPLATE);
-                ItemEntity drop = new ItemEntity(world, killedEntity.getX(), killedEntity.getY(), killedEntity.getZ(), item);
-                drop.setVelocity(drop.getVelocity().add((world.random.nextFloat() - world.random.nextFloat()) * 0.1f, world.random.nextFloat() * 0.05f, (world.random.nextFloat() - world.random.nextFloat()) * 0.1f));
-                world.spawnEntity(drop);
+            if (killedEntity.getType() == EntityType.WITHER_SKELETON && killedEntity.getName().equals(Text.literal("Ultra Wither Skeleton"))) {
+                killedEntity.dropItem(UltraArmor.ULTRA_CHESTPLATE);
             }
-            if (killedEntity.getName() == Text.literal("Ultra Enderman")) {
-                ItemStack item = new ItemStack(UltraArmor.ULTRA_LEGGINGS);
-                ItemEntity drop = new ItemEntity(world, killedEntity.getX(), killedEntity.getY(), killedEntity.getZ(), item);
-                drop.setVelocity(drop.getVelocity().add((world.random.nextFloat() - world.random.nextFloat()) * 0.1f, world.random.nextFloat() * 0.05f, (world.random.nextFloat() - world.random.nextFloat()) * 0.1f));
-                world.spawnEntity(drop);
+            if (killedEntity.getType() == EntityType.ENDERMAN && killedEntity.getName().equals(Text.literal("Ultra Enderman"))) {
+                killedEntity.dropItem(UltraArmor.ULTRA_LEGGINGS);
             }
-            if (killedEntity.getName() == Text.literal("Ultra Magma Cube")) {
-                ItemStack item = new ItemStack(UltraArmor.ULTRA_BOOTS);
-                ItemEntity drop = new ItemEntity(world, killedEntity.getX(), killedEntity.getY(), killedEntity.getZ(), item);
-                drop.setVelocity(drop.getVelocity().add((world.random.nextFloat() - world.random.nextFloat()) * 0.1f, world.random.nextFloat() * 0.05f, (world.random.nextFloat() - world.random.nextFloat()) * 0.1f));
-                world.spawnEntity(drop);
+            if (killedEntity.getType() == EntityType.MAGMA_CUBE && killedEntity.getName().equals(Text.literal("Ultra Magma Cube"))) {
+                killedEntity.dropItem(UltraArmor.ULTRA_BOOTS);
             }
         }
 
