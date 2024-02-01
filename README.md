@@ -74,9 +74,7 @@ Novedades de El Justiciero:
 -Tiene 100% Knockback Resistance.
 -Tiene 4 puntos de armadura extra y 8 de dureza de armadura. 
 
-## DIFICULTAD TOTAL DE LA SEMANA 6/13 (se aplican en 2d)
-
-1 de cada 20 Skeleton que aparezcan serán Wither Skeleton Full Iron (Overworld)
+## DIFICULTAD TOTAL DE LA SEMANA 6/13
 Novedad: El 95% de los Pigman (antes 75%) irán Full Iron y con protección III
 El 60% de los Enderman (End) 25At Velocidad II Regeneración I
 Novedad: El 50% de los Zombie (antes 10%) irán con 60PV (antes 40PV), Espada de Diamante Full Diamante
