@@ -4,13 +4,19 @@ import gabzeph.ultrareborn.armor.UltraArmor;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.mob.MagmaCubeEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionUtil;
 import net.minecraft.text.Text;
 
 public class CustomEntities {
@@ -97,6 +103,35 @@ public class CustomEntities {
 
     public static GhastEntity getPolterghost(GhastEntity entity) {
         ((GhastFireball)entity).setFireballStrength(5);
+        return entity;
+    }
+
+    public static SkeletonEntity getJusticiero(SkeletonEntity entity) {
+        ItemStack bow = new ItemStack(Items.BOW);
+        bow.addEnchantment(Enchantments.PUNCH, 5);
+        bow.addEnchantment(Enchantments.POWER, 10);
+        ItemStack chainmail_chestplate = new ItemStack(Items.CHAINMAIL_CHESTPLATE);
+        chainmail_chestplate.addEnchantment(Enchantments.PROJECTILE_PROTECTION,12);
+        ItemStack chainmail_leggings = new ItemStack(Items.CHAINMAIL_LEGGINGS);
+        chainmail_leggings.addEnchantment(Enchantments.PROJECTILE_PROTECTION,12);
+        ItemStack chainmail_boots = new ItemStack(Items.CHAINMAIL_BOOTS);
+        chainmail_boots.addEnchantment(Enchantments.PROJECTILE_PROTECTION,12);
+        ItemStack mining_fatigue_arrow = new ItemStack(Items.TIPPED_ARROW);
+        mining_fatigue_arrow = PotionUtil.setPotion(mining_fatigue_arrow, new Potion(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 15, 10)));
+        mining_fatigue_arrow.setCount(64);
+        EntityAttributeInstance knockback_resistance = entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
+        EntityAttributeInstance armor = entity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR);
+        EntityAttributeInstance armor_toughness = entity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR_TOUGHNESS);
+        knockback_resistance.setBaseValue(10.0d);
+        armor.setBaseValue(4.0d);
+        armor_toughness.setBaseValue(8.0d);
+        entity.equipStack(EquipmentSlot.CHEST, chainmail_chestplate);
+        entity.equipStack(EquipmentSlot.LEGS, chainmail_leggings);
+        entity.equipStack(EquipmentSlot.FEET, chainmail_boots);
+        entity.equipStack(EquipmentSlot.OFFHAND, mining_fatigue_arrow);
+        entity.equipStack(EquipmentSlot.MAINHAND, bow);
+        entity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+        setAllEquipmentDropChancesZero(entity);
         return entity;
     }
 
