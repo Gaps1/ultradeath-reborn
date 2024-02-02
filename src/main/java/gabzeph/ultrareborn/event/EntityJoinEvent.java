@@ -2,17 +2,15 @@ package gabzeph.ultrareborn.event;
 
 import gabzeph.ultrareborn.cardinal.UltradeathWorldComponents;
 import gabzeph.ultrareborn.entity.CreeperCharged;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.*;
-import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.text.Text;
 import net.minecraft.world.dimension.DimensionTypes;
 
 import static gabzeph.ultrareborn.entity.CustomEntities.*;
@@ -24,432 +22,389 @@ public class EntityJoinEvent {
         }
         LivingEntity Lentity = (LivingEntity) entity;
         int week = UltradeathWorldComponents.WEEK.get(world).getValue();
-        //BoolComponent boolComp = UltradeathEntityComponents.CUSTOM_DROPS.get(Lentity);
+        float random = world.random.nextFloat();
 
-        if (week == 2) {
-            if (world.random.nextFloat() <= 0.1f) { // 10% chance
-                if (entity instanceof ZombieEntity || entity instanceof SkeletonEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
-                    return;
-                }
-                if (entity instanceof EndermanEntity || entity instanceof SpiderEntity) {
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
-                    return;
-                }
-            }
-        }
-        if (week == 3) {
-            if (world.random.nextFloat() <= 0.3f) { // 30% chance
-                if (entity instanceof ZombieEntity || entity instanceof SkeletonEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
-                    return;
-                }
-                if (entity instanceof EndermanEntity || entity instanceof SpiderEntity) {
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
-                    return;
-                }
-
-            }
-            if (world.random.nextFloat() <= 0.1f) { // 10% chance
-                if (entity instanceof SkeletonEntity) {
-                    getImperialSkeleton(Lentity);
-                    return;
-                }
-            }
-            if (world.random.nextFloat() <= 0.05f) { // 5% chance
-                if (entity instanceof SkeletonEntity) {
-                    Entity vehicle = entity.getControllingVehicle();
-                    if (vehicle != null) {
-                        getImperialSkeleton(Lentity);
-                        return;
+        switch (week) {
+            case 2:
+                if (entity instanceof ZombieEntity) {
+                    if (random <= 0.1f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
                     }
+                    break;
                 }
-            }
-            if (world.random.nextFloat() <= 0.5f) { // 50% chance
-                if (entity instanceof GhastEntity) {
-                    getPolterghost((GhastEntity) Lentity);
-                    return;
-                }
-            }
-        }
-
-        if (week == 4) {
-            if (world.random.nextFloat() <= 0.8f) { // 80% chance
-                if (entity instanceof ZombieEntity && !(entity instanceof HuskEntity) || entity instanceof SkeletonEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
-                    return;
-                }
-                if (entity instanceof EndermanEntity || entity instanceof SpiderEntity) {
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
-                    return;
-                }
-
-            }
-            if (world.random.nextFloat() <= 0.6f) { // 60% chance
-                if (entity instanceof GhastEntity) {
-                    getPolterghost((GhastEntity) Lentity);
-                    return;
-                }
-                if (entity.getWorld().getDimensionKey().equals(DimensionTypes.THE_END)) {
-                    if (entity instanceof EndermanEntity) {
-                        EntityAttributeInstance attack_damage = (Lentity).getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-                        attack_damage.setBaseValue(25.0f);
-                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
-                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1));
-                        return;
+                if (entity instanceof SkeletonEntity && !(entity instanceof WitherSkeletonEntity)) {
+                    if (random <= 0.1f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
                     }
-                }
-            }
-            if (entity instanceof SkeletonEntity) {
-                Entity vehicle = entity.getControllingVehicle();
-                if (vehicle != null) {
-                    if (world.random.nextFloat() <= 0.1f) { // 10%
-                        getImperialSkeleton(Lentity);
-                        return;
-                    }
-                }
-                if (world.random.nextFloat() <= 0.15f) { // 15%
-                    getImperialSkeleton(Lentity);
-                    return;
-                }
-            }
-            if (world.random.nextFloat() <= 0.1f) { // 10% chance
-
-                if (entity instanceof WitherSkeletonEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-                    return;
-                }
-
-                if (entity instanceof ZombieEntity && !(entity instanceof HuskEntity)) {
-                    Lentity.setHealth(40.0f);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));
-                    Lentity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS));
-                    Lentity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
-                    Lentity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));
-                    Lentity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
-                    return;
-                }
-            }
-            if (entity instanceof CreeperEntity) {
-                CreeperEntity Centity = (CreeperEntity) Lentity;
-                if (world.getDimensionKey().equals(DimensionTypes.OVERWORLD)) {
-                    if (world.random.nextFloat() <= 0.4f) {
-                        ((CreeperCharged) entity).setCharged(Centity);
-                        return;
-                    }
-                }
-                if (world.getDimensionKey().equals(DimensionTypes.THE_NETHER)) {
-                    if (world.random.nextFloat() <= 0.3f) {
-                        ((CreeperCharged) entity).setCharged(Centity);
-                        return;
-                    }
-                }
-                if (world.getDimensionKey().equals(DimensionTypes.THE_END)) {
-                    if (world.random.nextFloat() <= 0.2f) {
-                        ((CreeperCharged) entity).setCharged(Centity);
-                        return;
-                    }
-                }
-            }
-            if (world.random.nextFloat() <= 0.5f) {
-                if (entity instanceof ZombifiedPiglinEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-                    return;
-                }
-            }
-            if (world.random.nextFloat() <= 0.01f) {
-                if (entity instanceof WitchEntity) {
-                    Lentity.setHealth(32.0f);
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
-                    return;
-                }
-            }
-
-            if (world.random.nextFloat() <= 0.03f) { // 3% chance
-                if (entity instanceof HuskEntity) {
-                    getUltraHusk(Lentity);
-                    return;
-                }
-                if (entity instanceof WitherSkeletonEntity) {
-                    getUltraWitherSkeleton(Lentity);
-                    return;
+                    break;
                 }
                 if (entity instanceof EndermanEntity) {
-                    getUltraEnderman(Lentity);
-                    return;
-                }
-                if (entity instanceof MagmaCubeEntity) {
-                    if (Lentity.getName().equals(Text.literal("Ultra Magma Cube"))) {
-                        return;
+                    if (random <= 0.1f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
                     }
-                    getUltraMagmaCube((MagmaCubeEntity) Lentity);
-                    return;
-                }
-            }
-        }
-        if (week == 5) {
-            if (world.random.nextFloat() <= 0.8f) { // 80% chance
-                if (entity instanceof ZombieEntity && !(entity instanceof HuskEntity) || entity instanceof SkeletonEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
-                    return;
-                }
-                if (entity instanceof EndermanEntity || entity instanceof SpiderEntity) {
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
-                    return;
-                }
-
-            }
-            if (world.random.nextFloat() <= 0.6f) { // 60% chance
-                if (entity instanceof GhastEntity) {
-                    getPolterghost((GhastEntity) Lentity);
-                    return;
-                }
-                if (entity.getWorld().getDimensionKey().equals(DimensionTypes.THE_END)) {
-                    if (entity instanceof EndermanEntity) {
-                        EntityAttributeInstance attack_damage = (Lentity).getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-                        attack_damage.setBaseValue(25.0f);
-                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
-                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1));
-                        return;
-                    }
-                }
-            }
-            if (entity instanceof SkeletonEntity) {
-                Entity vehicle = entity.getVehicle();
-                if (vehicle != null) {
-                    if (world.random.nextFloat() <= 0.5f) { // 50%
-                        ((LivingEntity)vehicle).addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
-                        getImperialSkeleton(Lentity);
-                        return;
-                    }
-                }
-                float randomFloat = world.random.nextFloat();
-                if (randomFloat <= 0.3f) { // 30%
-                    getImperialSkeleton(Lentity);
-                    return;
-                }
-                if (randomFloat > 0.3f && randomFloat <= 0.55f) { // 25%
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-                }
-                if (randomFloat > 0.55f && randomFloat <= 0.60f) {
-                    getJusticiero((SkeletonEntity) Lentity);
-                }
-
-            }
-            if (world.random.nextFloat() <= 0.1f) { // 10% chance
-
-                if (entity instanceof WitherSkeletonEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-                    return;
-                }
-
-                if (entity instanceof WitchEntity) {
-                    Lentity.setHealth(32.0f);
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
-                    return;
-                }
-            }
-            if (entity instanceof CreeperEntity) {
-                CreeperEntity Centity = (CreeperEntity) Lentity;
-                if (world.getDimensionKey().equals(DimensionTypes.OVERWORLD)) {
-                    if (world.random.nextFloat() <= 0.4f) {
-                        ((CreeperCharged) entity).setCharged(Centity);
-                        return;
-                    }
-                }
-                if (world.getDimensionKey().equals(DimensionTypes.THE_NETHER)) {
-                    if (world.random.nextFloat() <= 0.3f) {
-                        ((CreeperCharged) entity).setCharged(Centity);
-                        return;
-                    }
-                }
-                if (world.getDimensionKey().equals(DimensionTypes.THE_END)) {
-                    if (world.random.nextFloat() <= 0.2f) {
-                        ((CreeperCharged) entity).setCharged(Centity);
-                        return;
-                    }
-                }
-            }
-            if (world.random.nextFloat() <= 0.75f) { // 75%
-                if (entity instanceof ZombifiedPiglinEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-                    return;
-                }
-            }
-
-            if (world.random.nextFloat() <= 0.5f) {
-                if (entity instanceof ZombieEntity && !(entity instanceof HuskEntity)) {
-                    Lentity.setHealth(40.0f);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));
-                    Lentity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS));
-                    Lentity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
-                    Lentity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));
-                    Lentity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
-                    return;
-                } else {
-                    if (entity instanceof ZombieEntity && !(entity instanceof HuskEntity)) {
-                        ChickenEntity chicken = new ChickenEntity(EntityType.CHICKEN, world);
-                        world.spawnEntity(chicken);
-                        ((ZombieEntity)Lentity).setBaby(true);
-                        Lentity.startRiding(chicken);
-                        Lentity.setHealth(40.0f);
-                        Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));
-                        Lentity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS));
-                        Lentity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
-                        Lentity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));
-                        Lentity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
-                        return;
-                    }
-                }
-            }
-
-            if (world.random.nextFloat() <= 0.03f) { // 3% chance
-                if (entity instanceof HuskEntity) {
-                    getUltraHusk(Lentity);
-                    return;
-                }
-                if (entity instanceof WitherSkeletonEntity) {
-                    getUltraWitherSkeleton(Lentity);
-                    return;
-                }
-                if (entity instanceof EndermanEntity) {
-                    getUltraEnderman(Lentity);
-                    return;
-                }
-                if (entity instanceof MagmaCubeEntity) {
-                    if (Lentity.getName().equals(Text.literal("Ultra Magma Cube"))) {
-                        return;
-                    }
-                    getUltraMagmaCube((MagmaCubeEntity) Lentity);
-                    return;
-                }
-            }
-        }
-        if (week >= 6) {
-            if (entity instanceof EndermanEntity) {
-                EntityAttributeInstance attack_damage = (Lentity).getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
-                attack_damage.setBaseValue(25.0f);
-                Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
-                Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1));
-                return;
-            }
-
-            if (world.random.nextFloat() <= 0.6f) { // 60% chance
-                if (entity instanceof GhastEntity) {
-                    getPolterghost((GhastEntity) Lentity);
-                    return;
+                    break;
                 }
                 if (entity instanceof SpiderEntity) {
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, -1, 1));
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, -1, 1));
-                }
-            }
-            if (entity instanceof SkeletonEntity) {
-                Entity vehicle = entity.getVehicle();
-                if (vehicle != null) {
-                    if (world.random.nextFloat() <= 0.70f) { // 70%
-                        ((LivingEntity)vehicle).addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
-                        getImperialSkeleton(Lentity);
-                        return;
+                    if (random <= 0.1f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
                     }
+                    break;
                 }
-                float randomFloat = world.random.nextFloat();
-                if (randomFloat <= 0.3f) { // 30%
-                    getImperialSkeleton(Lentity);
-                    return;
+                break;
+            case 3:
+                if (entity instanceof ZombieEntity) {
+                    if (random <= 0.3f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    }
+                    break;
                 }
-                if (randomFloat > 0.3f && randomFloat <= 0.55f) { // 25%
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
+                if (entity instanceof SkeletonEntity && !(entity instanceof WitherSkeletonEntity)) {
+                    if (random <= 0.3f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    } else if (random <= 0.4f) {
+                        createImperialSkeleton(Lentity);
+                    }
+                    break;
                 }
-                if (randomFloat > 0.55f && randomFloat <= 0.60f) {
-                    getJusticiero((SkeletonEntity) Lentity);
+                if (entity instanceof EndermanEntity) {
+                    if (random <= 0.3f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
+                    }
+                    break;
                 }
-
-            }
-
-            if (world.random.nextFloat() <= 0.3f) {
-                if (entity instanceof WitchEntity) {
-                    Lentity.setHealth(32.0f);
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
-                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
-                    return;
+                if (entity instanceof SpiderEntity) {
+                    if (random <= 0.3f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
+                    }
+                    break;
                 }
-            }
-
-            if (world.random.nextFloat() <= 0.1f) { // 10% chance
-
-                if (entity instanceof WitherSkeletonEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-                    return;
+                if (entity instanceof GhastEntity) {
+                    if (random <= 0.5f) {
+                        createPolterghost((GhastEntity) Lentity);
+                    }
+                    break;
                 }
-
-            }
-            if (entity instanceof CreeperEntity) {
-                CreeperEntity Centity = (CreeperEntity) Lentity;
-                if (world.getDimensionKey().equals(DimensionTypes.OVERWORLD)) {
-                    ((CreeperCharged) entity).setCharged(Centity);
-                    Centity.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
-                    return;
+                break;
+            case 4:
+                if (entity instanceof HuskEntity) {
+                    if (random <= 0.03f) {
+                        createUltraHusk(Lentity);
+                    }
+                    break;
                 }
-                if (world.getDimensionKey().equals(DimensionTypes.THE_NETHER)) {
-                    ((CreeperCharged) entity).setCharged(Centity);
-                    Centity.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
-                    return;
-                }
-                if (world.getDimensionKey().equals(DimensionTypes.THE_END)) {
-                    ((CreeperCharged) entity).setCharged(Centity);
-                    Centity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.TOTEM_OF_UNDYING));
-                    return;
-                }
-            }
-            if (world.random.nextFloat() <= 0.95f) { // 95%
-                if (entity instanceof ZombifiedPiglinEntity) {
-                    getGenericIron(Lentity);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));
-                    return;
-                }
-            }
-
-            if (world.random.nextFloat() <= 0.5f) {
-                if (entity instanceof ZombieEntity && !(entity instanceof HuskEntity)) {
-                    Lentity.setHealth(60.0f);
-                    Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));
-                    Lentity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS));
-                    Lentity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
-                    Lentity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));
-                    Lentity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
-                    return;
-                } else {
-                    if (entity instanceof ZombieEntity && !(entity instanceof HuskEntity)) {
-                        ((ZombieEntity) Lentity).setBaby(true);
-                        ChickenEntity chicken = new ChickenEntity(EntityType.CHICKEN, world);
-                        world.spawnEntity(chicken);
-                        Lentity.startRiding(chicken);
+                if (entity instanceof ZombieEntity) {
+                    if (random <= 0.8f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    } else if (random <= 0.9f) {
+                        setGenericDiamond(Lentity, true, true, true, true, true);
                         Lentity.setHealth(40.0f);
-                        Lentity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));
-                        Lentity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS));
-                        Lentity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
-                        Lentity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));
-                        Lentity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));
-                        return;
                     }
+                    break;
                 }
-            }
+                if (entity instanceof WitherSkeletonEntity) {
+                    if (random <= 0.03f) {
+                        createUltraWitherSkeleton(Lentity);
+                    } else if (random <= 0.13f) {
+                        setGenericIron(Lentity, true, true, true, true, false);
+                    }
+                    break;
+                }
+                if (entity instanceof SkeletonEntity) {
+                    if (random <= 0.8f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    } else if (random <= 0.95f) {
+                        createImperialSkeleton(Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof EndermanEntity) {
+                    if (world.getDimensionKey() == DimensionTypes.THE_END) {
+                        if (random <= 0.6f) {
+                            Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+                            Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1));
+                            Lentity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(25.0d);
+                        }
+                        break;
+                    }
+                    if (random <= 0.8f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
+                    } else if (random <= 0.83f) {
+                        createUltraEnderman(Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof SpiderEntity) {
+                    if (random <= 0.8f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
+                    }
+                    break;
+                }
+                if (entity instanceof GhastEntity) {
+                    if (random <= 0.6f) {
+                        createPolterghost((GhastEntity) Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof MagmaCubeEntity) {
+                    if (random <= 0.03f) {
+                        createUltraMagmaCube((MagmaCubeEntity) Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof ZombifiedPiglinEntity) {
+                    if (random <= 0.5f) {
+                        setGenericIron(Lentity, true, true, true, true, false);
+                    }
+                    break;
+                }
+                if (entity instanceof CreeperEntity) {
+                    CreeperEntity Centity = ((CreeperEntity) Lentity);
+                    if (world.getDimensionKey() == DimensionTypes.THE_NETHER) {
+                        if (random <= 0.3f) {
+                            ((CreeperCharged)Centity).setCharged(Centity);
+                        }
+                    } else if (world.getDimensionKey() == DimensionTypes.THE_END) {
+                        if (random <= 0.2f) {
+                            ((CreeperCharged)Centity).setCharged(Centity);
+                        }
+                    } else {
+                        if (random <= 0.4f) {
+                            ((CreeperCharged)Centity).setCharged(Centity);
+                        }
+                    }
+                    break;
+                }
+                if (entity instanceof WitchEntity) {
+                    if (random <= 0.05f) {
+                        Lentity.setHealth(32.0f);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
+                    }
+                    break;
+                }
+            case 5:
+                if (entity instanceof HuskEntity) {
+                    if (random <= 0.03f) {
+                        createUltraHusk(Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof ZombieEntity) {
+                    if (random <= 0.5f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    } else {
+                        setGenericDiamond(Lentity, true, true, true, true, true);
+                        Lentity.setHealth(40.0f);
+                    }
+                    break;
+                }
+                if (entity instanceof WitherSkeletonEntity) {
+                    if (random <= 0.03f) {
+                        createUltraWitherSkeleton(Lentity);
+                    } else if (random <= 0.13f) {
+                        setGenericIron(Lentity, true, true, true, true, false);
+                    }
+                    break;
+                }
+                if (entity instanceof SkeletonEntity) {
+                    if (random <= 0.25f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    } else if (random <= 0.45f) {
+                        WitherSkeletonEntity witherSkeleton = new WitherSkeletonEntity(EntityType.WITHER_SKELETON, world);
+                        witherSkeleton.initialize(world, world.getLocalDifficulty(Lentity.getBlockPos()), SpawnReason.NATURAL, null, null);
+                        setGenericIron(witherSkeleton, true, true, true, true, false);
+                        Lentity.discard();
+                        world.spawnEntity(witherSkeleton);
+                    } else if (random <= 0.5f) {
+                        createJusticiero((SkeletonEntity) Lentity);
+                    } else {
+                        createImperialSkeleton(Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof EndermanEntity) {
+                    if (world.getDimensionKey() == DimensionTypes.THE_END) {
+                        if (random <= 0.6f) {
+                            Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+                            Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1));
+                            Lentity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(25.0d);
+                        }
+                        break;
+                    }
+                    if (random <= 0.8f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
+                    } else if (random <= 0.83f) {
+                        createUltraEnderman(Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof SpiderEntity) {
+                    if (random <= 0.8f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
+                    }
+                    if (random <= 0.3f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
+                    }
+                    break;
+                }
+                if (entity instanceof GhastEntity) {
+                    if (random <= 0.6f) {
+                        createPolterghost((GhastEntity) Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof MagmaCubeEntity) {
+                    if (random <= 0.03f) {
+                        createUltraMagmaCube((MagmaCubeEntity) Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof ZombifiedPiglinEntity) {
+                    if (random <= 0.75f) {
+                        setGenericIron(Lentity, true, true, true, true, false);
+                    }
+                    break;
+                }
+                if (entity instanceof CreeperEntity) {
+                    CreeperEntity Centity = ((CreeperEntity) Lentity);
+                    if (world.getDimensionKey() == DimensionTypes.THE_NETHER) {
+                        if (random <= 0.3f) {
+                            ((CreeperCharged)Centity).setCharged(Centity);
+                        }
+                    } else if (world.getDimensionKey() == DimensionTypes.THE_END) {
+                        if (random <= 0.2f) {
+                            ((CreeperCharged)Centity).setCharged(Centity);
+                        }
+                    } else {
+                        if (random <= 0.4f) {
+                            ((CreeperCharged)Centity).setCharged(Centity);
+                        }
+                    }
+                    break;
+                }
+                if (entity instanceof WitchEntity) {
+                    if (random <= 0.15f) {
+                        Lentity.setHealth(32.0f);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
+                    }
+                    break;
+                }
+            case 6:
+                if (entity instanceof ZombieEntity) {
+                    if (random <= 0.5f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    } else {
+                        setGenericDiamond(Lentity, true, true, true, true, true);
+                        Lentity.setHealth(60.0f);
+                    }
+                    break;
+                }
+                if (entity instanceof WitherSkeletonEntity) {
+                    if (random <= 0.5f) {
+                        setGenericIron(Lentity, true, true, true, true, false);
+                    }
+                    break;
+                }
+                if (entity instanceof SkeletonEntity) {
+                    if (random <= 0.25f) {
+                        setGenericIron(Lentity, false, true, true, true, false);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1));
+                    } else if (random <= 0.45f) {
+                        WitherSkeletonEntity witherSkeleton = new WitherSkeletonEntity(EntityType.WITHER_SKELETON, world);
+                        witherSkeleton.initialize(world, world.getLocalDifficulty(Lentity.getBlockPos()), SpawnReason.NATURAL, null, null);
+                        setGenericIron(witherSkeleton, true, true, true, true, false);
+                        Lentity.discard();
+                        world.spawnEntity(witherSkeleton);
+                    } else if (random <= 0.5f) {
+                        createJusticiero((SkeletonEntity) Lentity);
+                    } else {
+                        createImperialSkeleton(Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof EndermanEntity) {
+                    if (world.getDimensionKey() == DimensionTypes.THE_END) {
+                        if (random <= 0.6f) {
+                            Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+                            Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1));
+                            Lentity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(25.0d);
+                        }
+                        break;
+                    }
+                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+                    Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1));
+                    Lentity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(25);
+                    break;
+                }
+                if (entity instanceof SpiderEntity) {
+                    if (world.random.nextFloat() <= 0.6f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.STRENGTH, -1, 1));
+                    }
+                    if (world.random.nextFloat() <= 0.6f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
+                    }
+                    if (world.random.nextFloat() <= 0.6f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SLOW_FALLING, -1, 1));
+                    }
+                    if (world.random.nextFloat() <= 0.6f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, -1, 1));
+                    }
+                    if (world.random.nextFloat() <= 0.6f) {
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
+                    }
+                    break;
+                }
+                if (entity instanceof GhastEntity) {
+                    if (random <= 0.6f) {
+                        createPolterghost((GhastEntity) Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof MagmaCubeEntity) {
+                    if (random <= 0.03f) {
+                        createUltraMagmaCube((MagmaCubeEntity) Lentity);
+                    }
+                    break;
+                }
+                if (entity instanceof ZombifiedPiglinEntity) {
+                    if (random <= 0.95f) {
+                        setGenericIron(Lentity, true, true, true, true, false);
+                        setEnchants(Lentity, Enchantments.PROTECTION, 3, true, true, true, true, false);
+                    }
+                    break;
+                }
+                if (entity instanceof CreeperEntity) {
+                    CreeperEntity Centity = ((CreeperEntity) Lentity);
+                    if (world.getDimensionKey() == DimensionTypes.THE_NETHER) {
+                        ((CreeperCharged)Centity).setCharged(Centity);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
+                    } else if (world.getDimensionKey() == DimensionTypes.THE_END) {
+                        ((CreeperCharged)Centity).setCharged(Centity);
+                        Lentity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.TOTEM_OF_UNDYING));
+                    } else {
+                        ((CreeperCharged)Centity).setCharged(Centity);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.INVISIBILITY, -1));
+                    }
+                    break;
+                }
+                if (entity instanceof WitchEntity) {
+                    if (random <= 0.3f) {
+                        Lentity.setHealth(32.0f);
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.SPEED, -1, 1));
+                        Lentity.addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, -1, 1));
+                    }
+                    break;
+                }
         }
     }
 }

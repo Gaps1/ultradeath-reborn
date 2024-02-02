@@ -1,10 +1,10 @@
 package gabzeph.ultrareborn.entity;
 
 import gabzeph.ultrareborn.armor.UltraArmor;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -15,13 +15,13 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.text.Text;
 
 public class CustomEntities {
 
-    public static LivingEntity getUltraHusk(LivingEntity entity) {
+    public static LivingEntity createUltraHusk(LivingEntity entity) {
         entity.setHealth(120.0f);
         ItemStack ultraHelmet = new ItemStack(UltraArmor.ULTRA_HELMET);
         ultraHelmet.addEnchantment(Enchantments.PROTECTION, 7);
@@ -47,14 +47,14 @@ public class CustomEntities {
     }
 
 
-    public static LivingEntity getUltraMagmaCube(MagmaCubeEntity entity) {
+    public static LivingEntity createUltraMagmaCube(MagmaCubeEntity entity) {
         entity.setSize(15, true);
         entity.setCustomName(Text.literal("Ultra Magma Cube"));
         entity.setCustomNameVisible(false);
         return (LivingEntity) entity;
     }
 
-    public static LivingEntity getUltraEnderman(LivingEntity entity) {
+    public static LivingEntity createUltraEnderman(LivingEntity entity) {
         entity.setHealth(80.0f);
         EntityAttributeInstance attack_damage = entity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
         EntityAttributeInstance speed = entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
@@ -65,7 +65,7 @@ public class CustomEntities {
         return entity;
     }
 
-    public static LivingEntity getUltraWitherSkeleton(LivingEntity entity) {
+    public static LivingEntity createUltraWitherSkeleton(LivingEntity entity) {
         entity.setHealth(120.0f);
         EntityAttributeInstance attack_damage = entity.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE);
         EntityAttributeInstance speed = entity.getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
@@ -81,7 +81,7 @@ public class CustomEntities {
         return entity;
     }
 
-    public static LivingEntity getImperialSkeleton(LivingEntity entity) {
+    public static LivingEntity createImperialSkeleton(LivingEntity entity) {
         ItemStack imperialBow = new ItemStack(Items.BOW);
         imperialBow.addEnchantment(Enchantments.POWER, 5);
         imperialBow.addEnchantment(Enchantments.PUNCH, 3);
@@ -94,19 +94,44 @@ public class CustomEntities {
         return entity;
     }
 
-    public static LivingEntity getGenericIron(LivingEntity entity) {
-        entity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.IRON_BOOTS));
-        entity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));
-        entity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.IRON_LEGGINGS));
+    public static LivingEntity setGenericIron(LivingEntity entity, boolean... equip) {
+        // 0 = helmet; 1 = chest; 2 = leggings; 3 = boots; 4 = sword
+        if (equip[0]) {entity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.IRON_HELMET));}
+        if (equip[1]) {entity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.IRON_CHESTPLATE));}
+        if (equip[2]) {entity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.IRON_LEGGINGS));}
+        if (equip[3]) {entity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.IRON_BOOTS));}
+        if (equip[4]) {entity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));}
         return entity;
     }
 
-    public static GhastEntity getPolterghost(GhastEntity entity) {
+    public static LivingEntity setGenericDiamond(LivingEntity entity, boolean... equip) {
+        // 0 = helmet; 1 = chest; 2 = leggings; 3 = boots; 4 = sword
+        if (equip[0]) {entity.equipStack(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET));}
+        if (equip[1]) {entity.equipStack(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));}
+        if (equip[2]) {entity.equipStack(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS));}
+        if (equip[3]) {entity.equipStack(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS));}
+        if (equip[4]) {entity.equipStack(EquipmentSlot.MAINHAND, new ItemStack(Items.DIAMOND_SWORD));}
+        return entity;
+    }
+
+    public static LivingEntity setEnchants(LivingEntity entity, Enchantment enchantment, int level, boolean... equip) {
+        // 0 = helmet; 1 = chest; 2 = leggings; 3 = boots; 4 = sword
+        if (equip[0]) {entity.getEquippedStack(EquipmentSlot.HEAD).addEnchantment(enchantment, level);}
+        if (equip[1]) {entity.getEquippedStack(EquipmentSlot.CHEST).addEnchantment(enchantment, level);}
+        if (equip[2]) {entity.getEquippedStack(EquipmentSlot.LEGS).addEnchantment(enchantment, level);}
+        if (equip[3]) {entity.getEquippedStack(EquipmentSlot.FEET).addEnchantment(enchantment, level);}
+        if (equip[4]) {entity.getEquippedStack(EquipmentSlot.MAINHAND).addEnchantment(enchantment, level);}
+
+
+        return entity;
+    }
+
+    public static GhastEntity createPolterghost(GhastEntity entity) {
         ((GhastFireball)entity).setFireballStrength(5);
         return entity;
     }
 
-    public static SkeletonEntity getJusticiero(SkeletonEntity entity) {
+    public static SkeletonEntity createJusticiero(SkeletonEntity entity) {
         ItemStack bow = new ItemStack(Items.BOW);
         bow.addEnchantment(Enchantments.PUNCH, 5);
         bow.addEnchantment(Enchantments.POWER, 10);
@@ -117,7 +142,7 @@ public class CustomEntities {
         ItemStack chainmail_boots = new ItemStack(Items.CHAINMAIL_BOOTS);
         chainmail_boots.addEnchantment(Enchantments.PROJECTILE_PROTECTION,12);
         ItemStack mining_fatigue_arrow = new ItemStack(Items.TIPPED_ARROW);
-        mining_fatigue_arrow = PotionUtil.setPotion(mining_fatigue_arrow, new Potion(new StatusEffectInstance(StatusEffects.MINING_FATIGUE, 15, 10)));
+        PotionUtil.setPotion(mining_fatigue_arrow, Potions.STRONG_SLOWNESS);
         mining_fatigue_arrow.setCount(64);
         EntityAttributeInstance knockback_resistance = entity.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE);
         EntityAttributeInstance armor = entity.getAttributeInstance(EntityAttributes.GENERIC_ARMOR);
